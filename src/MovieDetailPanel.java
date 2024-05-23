@@ -3,12 +3,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 public class MovieDetailPanel extends JPanel {
     private Movie movie;
     private JPanel mainPanel;
     private CardLayout cardLayout;
 
-    public MovieDetailPanel(JPanel mainPanel, CardLayout cardLayout) {
+    public MovieDetailPanel(JPanel mainPanel, CardLayout cardLayout, DatabaseManager dbManager) {
         this.mainPanel = mainPanel;
         this.cardLayout = cardLayout;
         setLayout(new BorderLayout());
@@ -39,12 +40,16 @@ public class MovieDetailPanel extends JPanel {
             e.printStackTrace();
         }
 
+        DatabaseManager dbManager = new DatabaseManager("jdbc:oracle:thin:@localhost:1521:xe", "movie_user", "password");
+
         JButton reserveButton = new JButton("예매하기");
         reserveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 예매 화면으로 이동
-                ((ReservationPanel) mainPanel.getComponent(2)).setMovie(movie);
+                // 예약 패널 생성
+                ReservationPanel reservationPanel = new ReservationPanel(mainPanel, cardLayout, dbManager);
+                reservationPanel.setMovie(movie);
+                mainPanel.add(reservationPanel, "Reservation");
                 cardLayout.show(mainPanel, "Reservation");
             }
         });

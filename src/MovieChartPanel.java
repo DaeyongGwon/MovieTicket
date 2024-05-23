@@ -12,18 +12,19 @@ public class MovieChartPanel extends JPanel {
     private List<Movie> movies; // 실시간 무비 차트를 받아오는 리스트
     private JPanel mainPanel;
     private CardLayout cardLayout;
+    private DatabaseManager dbManager;
 
-    public MovieChartPanel(JPanel mainPanel, CardLayout cardLayout) {
+    public MovieChartPanel(JPanel mainPanel, CardLayout cardLayout, DatabaseManager dbManager) {
         this.mainPanel = mainPanel;
         this.cardLayout = cardLayout;
-        this.movies = getRealTimeMovieChart(); // 무비 차트 데이터 가져오기
+        this.dbManager = dbManager;
+        this.movies = Movie.getAllMovies(dbManager); // 데이터베이스에서 영화 목록 가져오기
         setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20)); // FlowLayout으로 변경
         initialize();
     }
 
     private void initialize() {
-        for (int i = 0; i < 3; i++) {
-            Movie movie = movies.get(i);
+        for (Movie movie : movies) {
             JPanel moviePanel = new JPanel(new BorderLayout());
 
             JLabel movieImageLabel = new JLabel();
@@ -53,15 +54,5 @@ public class MovieChartPanel extends JPanel {
 
             add(moviePanel);
         }
-    }
-
-    private List<Movie> getRealTimeMovieChart() {
-        // 무비 차트 데이터 받아오는 로직 구현 (예: API 호출)
-        String imgPath = "/Users/dae/Desktop/Java/workspace/MovieTicket/images/";
-        return List.of(
-                new Movie("극장판 하이큐!! 쓰레기장의 결전", "영화 1 설명", imgPath+"poster1.jpeg"),
-                new Movie("퓨리오사-매드맥스 사가", "영화 2 설명", imgPath+"poster2.jpeg"),
-                new Movie("가필드 더 무비", "영화 3 설명", imgPath+"poster3.jpeg")
-        );
     }
 }
